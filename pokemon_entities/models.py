@@ -1,19 +1,20 @@
 from django.db import models  # noqa F401
 
+
 class Pokemon(models.Model):
     """Вид покемонов."""
     title = models.CharField('название', max_length=200)
-    title_en = models.CharField('английское название', max_length=200, 
+    title_en = models.CharField('английское название', max_length=200,
                                 blank=True)
-    title_jp = models.CharField('японское название', max_length=200, 
+    title_jp = models.CharField('японское название', max_length=200,
                                 blank=True)
     description = models.TextField('описание', blank=True)
-    image = models.ImageField('картинка', upload_to='pokemons', 
+    image = models.ImageField('картинка', upload_to='pokemons',
                               null=True, blank=True)
 
     previous_evolution = models.ForeignKey(
-        'self', 
-        null=True, 
+        'self',
+        null=True,
         blank=True,
         verbose_name='предыдущая эволюция',
         on_delete=models.SET_NULL
@@ -33,7 +34,8 @@ class PokemonEntity(models.Model):
     health = models.IntegerField('здоровье', default=0, null=True, blank=True)
     strength = models.IntegerField('атака', default=0, null=True, blank=True)
     defence = models.IntegerField('защита', default=0, null=True, blank=True)
-    stamina = models.IntegerField('выносливость', default=0, null=True, blank=True)
+    stamina = models.IntegerField('выносливость', default=0,
+                                  null=True, blank=True)
 
     pokemon = models.ForeignKey(
         Pokemon,
@@ -42,4 +44,5 @@ class PokemonEntity(models.Model):
     )
 
     def __str__(self):
-        return f'{self.pokemon.title}: {self.appeared_at} - {self.disappeared_at}'
+        return (f'{self.pokemon.title}: {self.appeared_at} - '
+                f'{self.disappeared_at}')

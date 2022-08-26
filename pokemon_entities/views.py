@@ -39,7 +39,7 @@ def show_all_pokemons(request):
         if pokemon_entity.pokemon.image:
             img_url = request.build_absolute_uri(
                           pokemon_entity.pokemon.image.url
-        )
+            )
         else:
             img_url = None
 
@@ -47,7 +47,7 @@ def show_all_pokemons(request):
                 folium_map, pokemon_entity.lat,
                 pokemon_entity.lon,
                 img_url
-        )            
+        )
 
     pokemons = Pokemon.objects.all()
     pokemons_on_page = []
@@ -82,7 +82,7 @@ def show_pokemon(request, pokemon_id):
         if pokemon_entity.pokemon.image:
             img_url = request.build_absolute_uri(
                           pokemon_entity.pokemon.image.url
-        )
+            )
         else:
             img_url = None
 
@@ -93,13 +93,12 @@ def show_pokemon(request, pokemon_id):
         )
 
     if requested_pokemon_entities:
-       pokemon = requested_pokemon_entities[0].pokemon
+        pokemon = requested_pokemon_entities[0].pokemon
     else:
         try:
             pokemon = Pokemon.objects.get(id=pokemon_id)
         except:
             return HttpResponseNotFound('<h1>Такой покемон не найден</h1>')
-
 
     if pokemon.image:
         img_url = request.build_absolute_uri(pokemon.image.url)
@@ -108,7 +107,9 @@ def show_pokemon(request, pokemon_id):
 
     previous_evolution_on_page = None
     if pokemon.previous_evolution:
-        previous_pokemons = Pokemon.objects.filter(id=pokemon.previous_evolution.id)
+        previous_pokemons = Pokemon.objects.filter(
+                                id=pokemon.previous_evolution.id
+        )
         if previous_pokemons:
             if previous_pokemons[0].image:
                 previous_img_url = request.build_absolute_uri(
@@ -122,7 +123,7 @@ def show_pokemon(request, pokemon_id):
                 'img_url': previous_img_url,
                 'title_ru': previous_pokemons[0].title,
             }
-        
+
     next_evolution_on_page = None
     next_pokemons = pokemon.pokemon_set.all()
     if next_pokemons:
@@ -138,7 +139,6 @@ def show_pokemon(request, pokemon_id):
             'img_url': next_img_url,
             'title_ru': next_pokemons[0].title,
         }
-
 
     pokemon_on_page = {
             'pokemon_id': pokemon.id,
