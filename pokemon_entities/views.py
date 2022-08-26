@@ -101,23 +101,39 @@ def show_pokemon(request, pokemon_id):
     else:
         img_url = None
 
-    previous_evolution = None
+    previous_evolution_on_page = None
     if pokemon.previous_evolution:
-        pokemons = Pokemon.objects.filter(id=pokemon.previous_evolution.id)
-        if pokemons:
-            if pokemons[0].image:
+        previous_pokemons = Pokemon.objects.filter(id=pokemon.previous_evolution.id)
+        if previous_pokemons:
+            if previous_pokemons[0].image:
                 previous_img_url = request.build_absolute_uri(
-                                       pokemons[0].image.url
+                                       previous_pokemons[0].image.url
                 )
             else:
                 previous_img_url = None
 
-            previous_evolution = {
-                'pokemon_id': pokemon.previous_evolution.id,
+            previous_evolution_on_page = {
+                'pokemon_id': previous_pokemons[0].id,
                 'img_url': previous_img_url,
-                'title_ru': pokemons[0].title,
+                'title_ru': previous_pokemons[0].title,
             }
         
+    next_evolution_on_page = None
+    next_pokemons = pokemon.pokemon_set.all()
+    if next_pokemons:
+        if next_pokemons[0].image:
+            next_img_url = request.build_absolute_uri(
+                                    next_pokemons[0].image.url
+            )
+        else:
+            next_img_url = None
+
+        next_evolution_on_page = {
+            'pokemon_id': next_pokemons[0].id,
+            'img_url': next_img_url,
+            'title_ru': next_pokemons[0].title,
+        }
+
 
     pokemon_on_page = {
             'pokemon_id': pokemon.id,
@@ -126,7 +142,8 @@ def show_pokemon(request, pokemon_id):
             'description': pokemon.description,
             'title_en': pokemon.title_en,
             'title_jp': pokemon.title_jp,
-            'previous_evolution': previous_evolution,
+            'previous_evolution': previous_evolution_on_page,
+            'next_evolution': next_evolution_on_page,
         }
 
     return render(request, 'pokemon.html', context={
