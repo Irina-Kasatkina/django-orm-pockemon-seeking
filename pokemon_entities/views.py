@@ -31,26 +31,6 @@ def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
     ).add_to(folium_map)
 
 
-def query_debugger(func):
-    @functools.wraps(func)
-    def inner_func(*args, **kwargs):
-        reset_queries()
-        
-        start_queries = len(connection.queries)
-        start = time.perf_counter()
-        result = func(*args, **kwargs)
-        end = time.perf_counter()
-        end_queries = len(connection.queries)
-
-        print(f"Function : {func.__name__}")
-        print(f"Number of Queries : {end_queries - start_queries}")
-        print(f"Finished in : {(end - start):.2f}s")
-        return result
-
-    return inner_func
-
-
-@query_debugger
 def render_mainpage(request):
     pokemons = Pokemon.objects.all()
     now = localtime()
@@ -79,7 +59,6 @@ def render_mainpage(request):
     })
 
 
-@query_debugger
 def render_pokemon_page(request, pokemon_id):
     pokemon = get_object_or_404(Pokemon.objects.select_related('previous_evolution'),
                                 id=pokemon_id)
