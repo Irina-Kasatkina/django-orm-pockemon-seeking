@@ -1,9 +1,5 @@
 import folium
-import json
-import functools
-import time
 
-from django.db import connection, reset_queries
 from django.shortcuts import get_object_or_404, render
 from django.utils.timezone import localtime
 
